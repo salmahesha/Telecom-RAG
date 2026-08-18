@@ -1,0 +1,19 @@
+app:
+  name: "Telecom RAG API"
+  version: "1.0.0"
+
+
+data:
+  vector_index_path: "faiss_telecom_index"
+  chunk_size: 500
+  chunk_overlap: 100
+  batch_size: 50
+
+
+models:
+  embedding_provider: "huggingface"
+  embedding_model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  llm_provider: "gemini"
+  llm_model_name: "gemini-3.6-flash"
+  temperature: 0
+  K_retrieval: 20
