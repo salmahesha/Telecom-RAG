@@ -16,4 +16,4 @@ models:
   llm_provider: "gemini"
   llm_model_name: "gemini-3.6-flash"
   temperature: 0
-  K_retrieval: 20
+  k_retrieval: 20

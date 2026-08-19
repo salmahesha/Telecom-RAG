@@ -1,12 +1,10 @@
-# import os
-# absolute_path = os.path.abspath(__file__)
-
-# print(f"absolute_path:{absolute_path} " )
-
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.config.config_parser import settings
 from src.logging.logger import logger
 from src.core.factories import ModelFactory
+from src.vectorstore.database import VectorDatabase
+from src.routers import ingest_router, query_router
 
 async def running(app:FastAPI):
     logger.info("====================================\n ")
@@ -15,8 +13,15 @@ async def running(app:FastAPI):
     ModelFactory.get_embeddings()
     ModelFactory.get_llm()
     logger.info("====================================\n ")
+    
+    try:
+        repo = VectorDatabase()
+        repo.load_index()
+        logger.info("vectors loaded in memory")
+    except Exception as ex :
+        logger.warning(f"vectors not loaded {str(ex)}")
     yield  
-    logger.info("=== Shutting down Telecom RAG Microservice ===")
+    logger.info("=== Shutting down Telecom RAG Microservice (pause) ===")
 
 
 app = FastAPI(
@@ -25,6 +30,11 @@ app = FastAPI(
     description= "Telecom RAG With FAST API",
     lifespan=running
 )
+
+
+
+app.include_router(ingest_router.router)
+app.include_router(query_router.router)
 
 @app.get('/')
 def welcome():
@@ -39,4 +49,4 @@ def welcome():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000 , reload=True)
