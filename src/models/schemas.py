@@ -10,7 +10,10 @@ class QueryRequest(BaseModel):
     ticket:str = Field(...,min_length=1 , max_length=100 , description="Customer ticket problem description" , example="النت عندي فى مشكلة وعايز اعرف السبب")
     
 class QueryResponse(BaseModel):
-    ticket:str
-    response:str
-    sources_counts:int
-    execution_time_seconds:float
+    ticket: str
+    response: str
+    sources_count: int
+    execution_time_seconds: float
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
